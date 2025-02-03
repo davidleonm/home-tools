@@ -91,13 +91,6 @@ module "jdownloader" {
     }
   ]
 
-  security_context = {
-    run_as_user     = 1000
-    run_as_group    = 1003
-    fs_group        = 1003
-    run_as_non_root = true
-  }
-
   environment_variables = {
     SECURE_CONNECTION = "1"
     TZ                = var.time_zone
