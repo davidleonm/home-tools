@@ -92,7 +92,7 @@ module "jdownloader" {
   ]
 
   environment_variables = {
-    SECURE_CONNECTION = "1"
+    SECURE_CONNECTION = "0"
     TZ                = var.time_zone
   }
 }
