@@ -66,7 +66,7 @@ module "jdownloader" {
 
   namespace      = kubernetes_namespace.namespace.metadata[0].name
   name           = "jdownloader"
-  docker_image   = "jlesage/jdownloader-2:v22.11.1"
+  docker_image   = "jlesage/jdownloader-2"
   container_port = 5800
   external_port  = 30058
   sa_role        = kubernetes_role.pod_executor.metadata[0].name
@@ -90,6 +90,13 @@ module "jdownloader" {
       capacity           = var.downloads_volume_size
     }
   ]
+
+  security_context = {
+    run_as_user     = 1000
+    run_as_group    = 1003
+    fs_group        = 1003
+    run_as_non_root = true
+  }
 
   environment_variables = {
     SECURE_CONNECTION = "1"
