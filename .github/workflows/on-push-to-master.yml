@@ -28,7 +28,7 @@ jobs:
     uses: davidleonm/cicd-pipelines/.github/workflows/deploy-infrastructure.yml@master
     with:
       terraform-version: ~1.10.0
-      env-name: staging
+      env-name: production
     secrets:
       kubernetes-config-base64: ${{ secrets.KUBERNETES_CONFIG_BASE64 }}
       vars-list: ""
