@@ -75,7 +75,7 @@ module "jdownloader" {
   volumes = [
     {
       name               = "config"
-      storage_class_name = kubernetes_storage_class.weather_station_storage.metadata[0].name
+      storage_class_name = kubernetes_storage_class.home_tools_storage.metadata[0].name
       host_path          = "${var.environment_root_folder}/config"
       container_path     = "/config"
       read_only          = false
@@ -83,7 +83,7 @@ module "jdownloader" {
     },
     {
       name               = "downloads"
-      storage_class_name = kubernetes_storage_class.weather_station_storage.metadata[0].name
+      storage_class_name = kubernetes_storage_class.home_tools_storage.metadata[0].name
       host_path          = "${var.environment_root_folder}/downloads"
       container_path     = "/output"
       read_only          = false
