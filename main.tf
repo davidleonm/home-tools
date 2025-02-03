@@ -1,0 +1,104 @@
+provider "kubernetes" {}
+
+terraform {
+  required_version = ">= 1.10.0"
+
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "2.34.0"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
+    }
+  }
+
+  backend "kubernetes" {}
+}
+
+locals {
+  hostname                = "raspberrypi"
+  namespace               = "home-tools"
+  config_volume_size      = "1Gi"
+  downloads_volume_size   = "100Gi"
+  time_zone               = "Europe/Madrid"
+  environment_root_folder = "/mnt/kubernetes/home-tools/jdownloader"
+}
+
+resource "kubernetes_namespace" "namespace" {
+  metadata {
+    name = local.namespace
+  }
+}
+
+resource "kubernetes_role" "pod_executor" {
+  metadata {
+    name      = "pod-executor"
+    namespace = kubernetes_namespace.namespace.metadata[0].name
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods"]
+    verbs      = ["create"]
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["secrets"]
+    verbs      = ["get"]
+  }
+}
+
+resource "kubernetes_storage_class" "weather_station_storage" {
+  metadata {
+    name = "weather-station-storage"
+  }
+
+  storage_provisioner = "microk8s.io/hostpath"
+  reclaim_policy      = "Retain"
+  volume_binding_mode = "WaitForFirstConsumer"
+
+  parameters = {
+    pvDir = local.environment_root_folder
+  }
+}
+
+module "jdownloader" {
+  source = "github.com/davidleonm/cicd-pipelines/terraform/modules/service"
+
+  namespace      = kubernetes_namespace.namespace.metadata[0].name
+  name           = "jdownloader"
+  docker_image   = "jlesage/jdownloader-2"
+  container_port = 5800
+  external_port  = 30058
+  sa_role        = kubernetes_role.pod_executor.metadata[0].name
+  hostname       = local.hostname
+
+  volumes = [
+    {
+      name               = "config"
+      storage_class_name = kubernetes_storage_class.weather_station_storage.metadata[0].name
+      host_path          = "${local.environment_root_folder}/config"
+      container_path     = "/config"
+      read_only          = false
+      capacity           = local.config_volume_size
+    },
+    {
+      name               = "downloads"
+      storage_class_name = kubernetes_storage_class.weather_station_storage.metadata[0].name
+      host_path          = "${local.environment_root_folder}/downloads"
+      container_path     = "/output"
+      read_only          = false
+      capacity           = local.downloads_volume_size
+    }
+  ]
+
+  environment_variables = {
+    SECURE_CONNECTION = "1"
+    TZ                = local.time_zone
+    PGTZ              = local.time_zone
+  }
+}

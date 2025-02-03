@@ -1,0 +1,22 @@
+name: on-dispatch-destroy
+concurrency:
+  group: on-dispatch-destroy
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      destroy-environment:
+        description: Destroy the environment instead of creating it
+        type: boolean
+        required: true
+jobs:
+  destroy-infrastructure:
+    uses: davidleonm/cicd-pipelines/.github/workflows/deploy-infrastructure.yml@master
+    with:
+      terraform-version: ~1.10.0
+      env-name: production
+      destroy-environment: ${{ inputs.destroy-environment }}
+    secrets:
+      kubernetes-config-base64: ${{ secrets.KUBERNETES_CONFIG_BASE64 }}
+      vars-list: ""
