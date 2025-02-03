@@ -19,17 +19,12 @@ terraform {
 }
 
 locals {
-  hostname                = "raspberrypi"
-  namespace               = "home-tools"
-  config_volume_size      = "1Gi"
-  downloads_volume_size   = "100Gi"
-  time_zone               = "Europe/Madrid"
-  environment_root_folder = "/mnt/kubernetes/home-tools/jdownloader"
+  hostname = "raspberrypi"
 }
 
 resource "kubernetes_namespace" "namespace" {
   metadata {
-    name = local.namespace
+    name = var.namespace
   }
 }
 
@@ -62,7 +57,7 @@ resource "kubernetes_storage_class" "weather_station_storage" {
   volume_binding_mode = "WaitForFirstConsumer"
 
   parameters = {
-    pvDir = local.environment_root_folder
+    pvDir = var.environment_root_folder
   }
 }
 
@@ -81,24 +76,23 @@ module "jdownloader" {
     {
       name               = "config"
       storage_class_name = kubernetes_storage_class.weather_station_storage.metadata[0].name
-      host_path          = "${local.environment_root_folder}/config"
+      host_path          = "${var.environment_root_folder}/config"
       container_path     = "/config"
       read_only          = false
-      capacity           = local.config_volume_size
+      capacity           = var.config_volume_size
     },
     {
       name               = "downloads"
       storage_class_name = kubernetes_storage_class.weather_station_storage.metadata[0].name
-      host_path          = "${local.environment_root_folder}/downloads"
+      host_path          = "${var.environment_root_folder}/downloads"
       container_path     = "/output"
       read_only          = false
-      capacity           = local.downloads_volume_size
+      capacity           = var.downloads_volume_size
     }
   ]
 
   environment_variables = {
     SECURE_CONNECTION = "1"
-    TZ                = local.time_zone
-    PGTZ              = local.time_zone
+    TZ                = var.time_zone
   }
 }
