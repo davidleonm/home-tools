@@ -91,7 +91,7 @@ module "jdownloader" {
     }
   ]
 
-  security_context {
+  security_context = {
     run_as_user     = 1000
     run_as_group    = 1003
     fs_group        = 1003
