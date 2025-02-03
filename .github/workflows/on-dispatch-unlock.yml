@@ -11,7 +11,7 @@ on:
         type: string
         required: true
 jobs:
-  destroy-infrastructure:
+  unlock-state:
     uses: davidleonm/cicd-pipelines/.github/workflows/unlock-state.yml@master
     with:
       terraform-version: ~1.10.0
