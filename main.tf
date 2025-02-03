@@ -47,9 +47,9 @@ resource "kubernetes_role" "pod_executor" {
   }
 }
 
-resource "kubernetes_storage_class" "weather_station_storage" {
+resource "kubernetes_storage_class" "home_tools_storage" {
   metadata {
-    name = "weather-station-storage"
+    name = "home-tools-storage"
   }
 
   storage_provisioner = "microk8s.io/hostpath"
