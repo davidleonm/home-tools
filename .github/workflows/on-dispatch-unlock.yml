@@ -1,0 +1,21 @@
+name: on-dispatch-unlock
+concurrency:
+  group: on-dispatch-unlock
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      lock-id:
+        description: The lock ID to be used
+        type: string
+        required: true
+jobs:
+  destroy-infrastructure:
+    uses: davidleonm/cicd-pipelines/.github/workflows/unlock-state.yml@master
+    with:
+      terraform-version: ~1.10.0
+      env-name: production
+      lock-id: ${{ inputs.lock-id }}
+    secrets:
+      kubernetes-config-base64: ${{ secrets.KUBERNETES_CONFIG_BASE64 }}
