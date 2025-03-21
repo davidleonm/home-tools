@@ -1,5 +1,5 @@
 namespace               = "home-tools"
-time_zone               = "Europe/Madrid"
 config_volume_size      = "1Gi"
 downloads_volume_size   = "100Gi"
 environment_root_folder = "/mnt/kubernetes/home-tools/jdownloader"
+time_zone               = "Europe/Madrid"

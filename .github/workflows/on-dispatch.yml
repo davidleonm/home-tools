@@ -19,4 +19,4 @@ jobs:
       destroy-environment: ${{ inputs.destroy-environment }}
     secrets:
       kubernetes-config-base64: ${{ secrets.KUBERNETES_CONFIG_BASE64 }}
-      vars-list: ""
+      vars-list: "TF_VAR_grafana_token=${{ secrets.GRAFANA_TOKEN }}"
