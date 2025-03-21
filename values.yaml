@@ -24,6 +24,9 @@ destinations:
       type: basic
 clusterMetrics:
   enabled: true
+  node-exporter:
+    metricsTuning:
+      useIntegrationAllowList: true
 clusterEvents:
   enabled: true
 podLogs:
@@ -83,3 +86,8 @@ alloy-receiver:
         protocol: TCP
 alloy-profiles:
   enabled: true
+nodeLogs:
+  enabled: true
+  journal:
+    # The list of systemd units to keep scraped logs from. If empty, all units are scraped.
+    units: []
