@@ -81,7 +81,7 @@ resource "helm_release" "otel_operator" {
   name       = "opentelemetry-operator"
   chart      = "opentelemetry-operator"
   repository = "https://open-telemetry.github.io/opentelemetry-helm-charts"
-  namespace = var.namespace
+  namespace  = kubernetes_namespace.namespace.metadata[0].name
 
   set {
     name  = "admissionWebhooks.certManager.enabled"
@@ -96,5 +96,19 @@ resource "helm_release" "otel_operator" {
   set {
     name  = "manager.collectorImage.repository"
     value = "otel/opentelemetry-collector-k8s"
+  }
+}
+
+resource "kubernetes_manifest" "otel_collector" {
+  manifest = {
+    apiVersion = "opentelemetry.io/v1beta1"
+    kind      = "OpenTelemetryCollector"
+    "metadata" = {
+      "name" = "simplest"
+      "namespace" = kubernetes_namespace.namespace.metadata[0].name
+    }
+    "spec" = {
+      "mode" = "statefulset"
+    }
   }
 }
