@@ -76,3 +76,25 @@ module "jdownloader" {
     TZ                = var.time_zone
   }
 }
+
+resource "helm_release" "otel_operator" {
+  name       = "opentelemetry-operator"
+  chart      = "opentelemetry-operator"
+  repository = "https://open-telemetry.github.io/opentelemetry-helm-charts"
+  namespace = var.namespace
+
+  set {
+    name  = "admissionWebhooks.certManager.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "admissionWebhooks.autoGenerateCert.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "manager.collectorImage.repository"
+    value = "otel/opentelemetry-collector-k8s"
+  }
+}
