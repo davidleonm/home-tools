@@ -102,13 +102,16 @@ resource "helm_release" "otel_operator" {
 resource "kubernetes_manifest" "otel_collector" {
   manifest = {
     apiVersion = "opentelemetry.io/v1beta1"
-    kind      = "OpenTelemetryCollector"
-    "metadata" = {
-      "name" = "simplest"
-      "namespace" = kubernetes_namespace.namespace.metadata[0].name
+    kind       = "OpenTelemetryCollector"
+
+    metadata = {
+      name      = "opentelemetry-collector"
+      namespace = kubernetes_namespace.namespace.metadata[0].name
     }
-    "spec" = {
-      "mode" = "statefulset"
+
+    spec = {
+      mode   = "statefulset"
+      config = yamldecode(file("${path.module}/configs/open-telemetry-collector.yaml"))
     }
   }
 }
