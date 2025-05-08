@@ -1,6 +1,5 @@
 receivers:
   otlp:
-    # https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver/otlpreceiver
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
@@ -8,53 +7,28 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 75
+    spike_limit_percentage: 15
   batch:
     send_batch_size: 10000
     timeout: 10s
-  resourcedetection:
-    # Enriches telemetry data with resource information from the host
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/resourcedetectionprocessor
-    detectors: [ "env", "system" ]
-    override: false
 
 exporters:
-  otlphttp/grafana_cloud:
-    # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlphttpexporter
-    endpoint: "${env:GRAFANA_CLOUD_OTLP_ENDPOINT}"
-    auth:
-      authenticator: basicauth/grafana_cloud
-
-extensions:
-  basicauth/grafana_cloud:
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/basicauthextension
-    client_auth:
-      username: "${env:GRAFANA_CLOUD_INSTANCE_ID}"
-      password: "${env:GRAFANA_CLOUD_API_KEY}"
-
-connectors:
-  grafanacloud:
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/grafanacloudconnector
-    host_identifiers: ["host.name"]
+  debug:
 
 service:
-  extensions:
-    [
-      basicauth/grafana_cloud,
-    ]
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [resourcedetectionbatch]
-      exporters: [otlphttp/grafana_cloud, grafanacloud]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
     metrics:
-      receivers: [otlp, hostmetrics]
-      processors: [resourcedetectionbatch]
-      exporters: [otlphttp/grafana_cloud]
-    metrics/grafanacloud:
-      receivers: [grafanacloud]
-      processors: [batch]
-      exporters: [otlphttp/grafana_cloud]
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
     logs:
       receivers: [otlp]
-      processors: [resourcedetectionbatch]
-      exporters: [otlphttp/grafana_cloud]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
