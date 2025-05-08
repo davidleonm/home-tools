@@ -112,6 +112,17 @@ resource "kubernetes_manifest" "otel_collector" {
     spec = {
       mode   = "statefulset"
       config = yamldecode(file("${path.module}/configs/open-telemetry-collector.yaml"))
+
+      env = [
+        {
+          name  = "ENV_VAR_NAME_1"
+          value = "value1"
+        },
+        {
+          name  = "ENV_VAR_NAME_2"
+          value = "value2"
+        }
+      ]
     }
   }
 }
