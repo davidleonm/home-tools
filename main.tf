@@ -105,7 +105,7 @@ resource "kubernetes_manifest" "otel_collector" {
     kind       = "OpenTelemetryCollector"
 
     metadata = {
-      name      = "opentelemetry-collector"
+      name      = "opentelemetry"
       namespace = kubernetes_namespace.namespace.metadata[0].name
     }
 

@@ -16,7 +16,7 @@ processors:
     timeout: 10s
 
 exporters:
-  debug:
+  debug: {}
 
 service:
   pipelines:
