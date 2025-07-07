@@ -109,11 +109,6 @@ extensions:
       username: "${env:GRAFANA_CLOUD_INSTANCE_ID}"
       password: "${env:GRAFANA_CLOUD_API_KEY}"
 
-connectors:
-  grafanacloud:
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/grafanacloudconnector
-    host_identifiers: ["k8s.node.name"]
-
 service:
   extensions:
     [
@@ -124,7 +119,7 @@ service:
       receivers: [otlp]
       processors:
         [resourcedetection, k8sattributes, transform/drop_unneeded_resource_attributes, batch]
-      exporters: [otlphttp/grafana_cloud, grafanacloud]
+      exporters: [otlphttp/grafana_cloud]
     metrics:
       receivers: [otlp, hostmetrics]
       processors:
@@ -135,10 +130,6 @@ service:
           transform/add_resource_attributes_as_metric_attributes,
           batch,
         ]
-      exporters: [otlphttp/grafana_cloud]
-    metrics/grafanacloud:
-      receivers: [grafanacloud]
-      processors: [batch]
       exporters: [otlphttp/grafana_cloud]
     logs:
       receivers: [otlp]
