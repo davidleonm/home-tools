@@ -26,5 +26,5 @@ variable "environment_root_folder" {
 variable "grafana_token" {
   description = "Grafana API token for authentication"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
