@@ -28,3 +28,15 @@ variable "grafana_token" {
   type        = string
   sensitive   = true
 }
+
+variable "grafana_instance_id" {
+  description = "Grafana instance ID for telemetry"
+  type        = string
+  sensitive   = true
+}
+
+variable "grafana_endpoint" {
+  description = "Grafana endpoint for telemetry"
+  type        = string
+  sensitive   = true
+}
