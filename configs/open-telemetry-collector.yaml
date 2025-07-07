@@ -13,10 +13,10 @@ receivers:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
     collection_interval: 10s
     scrapers:
-      cpu:
-      memory:
-      load:
-      network:
+      cpu: {}
+      memory: {}
+      load: {}
+      network: {}
 
 processors:
   batch:
