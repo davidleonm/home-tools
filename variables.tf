@@ -22,3 +22,9 @@ variable "environment_root_folder" {
   description = "Root folder for environment files"
   type        = string
 }
+
+variable "grafana_token" {
+  description = "Grafana API token for authentication"
+  type        = string
+  sensitive = true
+}

@@ -18,7 +18,10 @@ processors:
     timeout: 10s
 
 exporters:
-  debug: {}
+  otlphttp/grafana:
+    endpoint: https://logs-prod-012.grafana.net/otlp
+    headers:
+      Authorization: "Bearer ${GRAFANA_CLOUD_API_KEY}"
 
 service:
   pipelines:
@@ -33,4 +36,4 @@ service:
     logs:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [debug]
+      exporters: [otlphttp/grafana]

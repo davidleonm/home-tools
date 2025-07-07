@@ -115,13 +115,9 @@ resource "kubernetes_manifest" "otel_collector" {
 
       env = [
         {
-          name  = "ENV_VAR_NAME_1"
-          value = "value1"
+          name  = "GRAFANA_CLOUD_API_KEY"
+          value = var.grafana_token
         },
-        {
-          name  = "ENV_VAR_NAME_2"
-          value = "value2"
-        }
       ]
     }
   }
