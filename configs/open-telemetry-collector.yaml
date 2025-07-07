@@ -8,6 +8,22 @@ receivers:
         include_metadata: true
         endpoint: 0.0.0.0:4318
 
+  prometheus/collector:
+    config:
+      scrape_configs:
+        - job_name: "opentelemetry-collector"
+          scrape_interval: 10s
+          static_configs:
+            - targets: [ ":8888" ]
+
+  host_metric:
+    collection_interval: 10s
+    scrapers:
+      cpu:
+      memory:
+      load:
+      network:
+
 processors:
   memory_limiter:
     check_interval: 1s
@@ -24,16 +40,45 @@ exporters:
       Authorization: "Bearer ${GRAFANA_CLOUD_API_KEY}"
 
 service:
+  extensions:
+    - health_check
   pipelines:
     traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [debug]
+      receivers:
+        - otlp
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - otlphttp/grafana
     metrics:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [debug]
+      receivers:
+        - otlp
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - otlphttp/grafana
     logs:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlphttp/grafana]
+      receivers:
+        - otlp
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - otlphttp/grafana
+    metrics/collector:
+      receivers:
+        - prometheus/collector
+        - host_metric
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - otlphttp/grafana
+
+  telemetry:
+    metrics:
+      address: 0.0.0.0:8888
+    logs:
+      level: info
