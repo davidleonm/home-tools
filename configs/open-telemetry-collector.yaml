@@ -92,7 +92,7 @@ processors:
         - k8s.pod.start_time
     pod_association:
       - sources:
-          # This rule will use the IP from the incoming connection from which the resource is received, and find the matching pod, based on the 'pod.status.podIP' of the observed pods
+          # This rule will  use the IP from the incoming connection from which the resource is received, and find the matching pod, based on the 'pod.status.podIP' of the observed pods
           - from: connection
 
 exporters:
