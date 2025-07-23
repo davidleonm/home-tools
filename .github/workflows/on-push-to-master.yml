@@ -24,7 +24,7 @@ jobs:
       - run: terraform validate
   deploy:
     needs: validate-tf
-    uses: davidleonm/cicd-pipelines/.github/actions/deploy-infrastructure@master
+    uses: davidleonm/cicd-pipelines/actions/deploy-infrastructure@master
     with:
       terraform-version: ~1.10.0
       env-name: production
