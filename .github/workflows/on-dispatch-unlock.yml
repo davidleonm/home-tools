@@ -10,12 +10,12 @@ on:
         description: The lock ID to be used
         type: string
         required: true
+
 jobs:
   unlock-state:
-    uses: davidleonm/cicd-pipelines/.github/workflows/unlock-state.yml@master
+    uses: davidleonm/cicd-pipelines/.github/actions/unlock-state
     with:
       terraform-version: ~1.10.0
       env-name: production
       lock-id: ${{ inputs.lock-id }}
-    secrets:
       kubernetes-config-base64: ${{ secrets.KUBERNETES_CONFIG_BASE64 }}
