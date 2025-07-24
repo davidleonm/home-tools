@@ -150,7 +150,7 @@ resource "kubernetes_cluster_role" "otel_collector_cluster_role" {
 
   rule {
     api_groups = [""]
-    resources  = ["nodes", "pods"]
+    resources  = ["nodes", "pods", "replicasets"]
     verbs      = ["get", "watch", "list"]
   }
 }
