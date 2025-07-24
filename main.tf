@@ -97,6 +97,11 @@ resource "helm_release" "otel_operator" {
     name  = "manager.collectorImage.repository"
     value = "otel/opentelemetry-collector-k8s"
   }
+
+  set {
+    name  = "manager.createRbacPermissions"
+    value = "true"
+  }
 }
 
 resource "kubernetes_manifest" "otel_collector" {
