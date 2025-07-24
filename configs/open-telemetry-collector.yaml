@@ -7,14 +7,6 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-  kubeletstats:
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver
-    collection_interval: 10s
-    insecure_skip_verify: true
-    metric_groups:
-      - node
-      - pod
-      - container
 
 processors:
   batch:
@@ -119,7 +111,7 @@ service:
         [resourcedetection, k8sattributes, transform/drop_unneeded_resource_attributes, batch]
       exporters: [otlphttp/grafana_cloud]
     metrics:
-      receivers: [otlp, kubeletstats]
+      receivers: [otlp]
       processors:
         [
           resourcedetection,
