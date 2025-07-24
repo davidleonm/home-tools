@@ -77,7 +77,7 @@ module "jdownloader" {
   }
 }
 
-/*resource "helm_release" "otel_operator" {
+resource "helm_release" "otel_operator" {
   name       = "opentelemetry-operator"
   chart      = "opentelemetry-operator"
   repository = "https://open-telemetry.github.io/opentelemetry-helm-charts"
@@ -134,4 +134,4 @@ resource "kubernetes_manifest" "otel_collector" {
       ]
     }
   }
-}*/
+}
