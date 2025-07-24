@@ -99,8 +99,8 @@ resource "helm_release" "otel_operator" {
   }
 
   set {
-    name  = "manager.createRbacPermissions"
-    value = "false"
+    name  = "presets.hostMetrics.enabled"
+    value = "true"
   }
 }
 
@@ -133,42 +133,5 @@ resource "kubernetes_manifest" "otel_collector" {
         }
       ]
     }
-  }
-}
-
-data "kubernetes_service_account" "otel_collector_sa" {
-  metadata {
-    name      = "opentelemetry-collector"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
-  }
-}
-
-resource "kubernetes_cluster_role" "otel_collector_cluster_role" {
-  metadata {
-    name = "otel-collector-metrics"
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["nodes", "pods", "replicasets"]
-    verbs      = ["get", "watch", "list"]
-  }
-}
-
-resource "kubernetes_cluster_role_binding" "otel_collector" {
-  metadata {
-    name = "otel-collector-role-binding"
-  }
-
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = kubernetes_cluster_role.otel_collector_cluster_role.metadata[0].name
-  }
-
-  subject {
-    kind      = "ServiceAccount"
-    name      = data.kubernetes_service_account.otel_collector_sa.metadata[0].name
-    namespace = kubernetes_namespace.namespace.metadata[0].name
   }
 }
