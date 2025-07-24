@@ -99,7 +99,7 @@ resource "helm_release" "otel_operator" {
   }
 
   set {
-    name  = "presets.hostMetrics.enabled"
+    name  = "presets.kubeletMetrics.enabled"
     value = "true"
   }
 }
@@ -115,7 +115,7 @@ resource "kubernetes_manifest" "otel_collector" {
     }
 
     spec = {
-      mode   = "statefulset"
+      mode   = "daemonset"
       config = yamldecode(file("${path.module}/configs/open-telemetry-collector.yaml"))
 
       env = [
