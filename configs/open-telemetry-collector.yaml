@@ -10,6 +10,7 @@ receivers:
   kubeletstats:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver
     collection_interval: 10s
+    insecure_skip_verify: true
     metric_groups:
       - node
       - pod
