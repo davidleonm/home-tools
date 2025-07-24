@@ -1,6 +1,5 @@
 # https://grafana.com/docs/grafana-cloud/monitor-applications/application-observability/collector/opentelemetry-collector/
 # https://opentelemetry.io/docs/collector/configuration/
-# Tested with OpenTelemetry Collector Contrib v0.98.0
 receivers:
   otlp:
     protocols:
@@ -8,15 +7,13 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-  hostmetrics:
-    # Optional. Host Metrics Receiver added as an example of Infra Monitoring capabilities of the OpenTelemetry Collector
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
+  kubeletstats:
+    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver
     collection_interval: 10s
-    scrapers:
-      cpu: {}
-      memory: {}
-      load: {}
-      network: {}
+    metric_groups:
+      - node
+      - pod
+      - container
 
 processors:
   batch:
@@ -121,7 +118,7 @@ service:
         [resourcedetection, k8sattributes, transform/drop_unneeded_resource_attributes, batch]
       exporters: [otlphttp/grafana_cloud]
     metrics:
-      receivers: [otlp, hostmetrics]
+      receivers: [otlp, kubeletstats]
       processors:
         [
           resourcedetection,
