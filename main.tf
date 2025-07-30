@@ -77,7 +77,7 @@ module "jdownloader" {
   }
 }
 
-/*resource "helm_release" "otel_operator" {
+resource "helm_release" "otel_operator" {
   name       = "opentelemetry-operator"
   chart      = "opentelemetry-operator"
   repository = "https://open-telemetry.github.io/opentelemetry-helm-charts"
@@ -97,14 +97,9 @@ module "jdownloader" {
     name  = "manager.collectorImage.repository"
     value = "otel/opentelemetry-collector-k8s"
   }
-
-  set {
-    name  = "presets.kubeletMetrics.enabled"
-    value = "true"
-  }
 }
 
-resource "kubernetes_manifest" "otel_collector" {
+/*resource "kubernetes_manifest" "otel_collector" {
   manifest = {
     apiVersion = "opentelemetry.io/v1beta1"
     kind       = "OpenTelemetryCollector"
