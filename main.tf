@@ -97,9 +97,14 @@ resource "helm_release" "otel_operator" {
     name  = "manager.collectorImage.repository"
     value = "otel/opentelemetry-collector-k8s"
   }
+
+  set {
+    name  = "manager.createRbacPermissions"
+    value = "true"
+  }
 }
 
-/*resource "kubernetes_manifest" "otel_collector" {
+resource "kubernetes_manifest" "otel_collector" {
   manifest = {
     apiVersion = "opentelemetry.io/v1beta1"
     kind       = "OpenTelemetryCollector"
@@ -110,7 +115,7 @@ resource "helm_release" "otel_operator" {
     }
 
     spec = {
-      mode   = "daemonset"
+      mode   = "statefulset"
       config = yamldecode(file("${path.module}/configs/open-telemetry-collector.yaml"))
 
       env = [
@@ -129,4 +134,4 @@ resource "helm_release" "otel_operator" {
       ]
     }
   }
-}*/
+}
