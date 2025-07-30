@@ -20,7 +20,7 @@ receivers:
 processors:
   batch:
     send_batch_size: 10000
-    timeout: 10s
+    timeout: 1s
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
   resourcedetection:
     # Enriches telemetry data with resource information from the host

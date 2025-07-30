@@ -9,21 +9,21 @@ on:
       - master
 
 jobs:
-#  validate-tf:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: actions/setup-go@v5
-#      - uses: hashicorp/setup-terraform@v3
-#        with:
-#          terraform_wrapper: false
-#          terraform_version: ~1.10.0
-#      - uses: terraform-linters/setup-tflint@v4
-#      - run: terraform init --backend=false && tflint --init
-#      - run: tflint
-#      - run: terraform validate
+  validate-tf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: ~1.10.0
+      - uses: terraform-linters/setup-tflint@v4
+      - run: terraform init --backend=false && tflint --init
+      - run: tflint
+      - run: terraform validate
   deploy:
-#    needs: validate-tf
+    needs: validate-tf
     uses: davidleonm/cicd-pipelines/.github/workflows/deploy-infrastructure.yml@master
     with:
       terraform-version: ~1.10.0
