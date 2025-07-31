@@ -10,7 +10,7 @@ receivers:
   hostmetrics:
     # Optional. Host Metrics Receiver added as an example of Infra Monitoring capabilities of the OpenTelemetry Collector
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
-    collection_interval: 10s
+    collection_interval: 1m
     scrapers:
       cpu: {}
       memory: {}
@@ -20,7 +20,7 @@ receivers:
 processors:
   batch:
     send_batch_size: 10000
-    timeout: 1s
+    timeout: 5s
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
   resourcedetection:
     # Enriches telemetry data with resource information from the host
