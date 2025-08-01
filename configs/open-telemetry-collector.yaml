@@ -64,6 +64,7 @@ processors:
       - context: datapoint
         statements:
           - set(attributes["deployment.environment"], resource.attributes["deployment.environment"])
+          - set(attributes["service.name"], resource.attributes["service.name"])
           - set(attributes["service.version"], resource.attributes["service.version"])
 
   k8sattributes:
