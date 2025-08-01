@@ -10,14 +10,16 @@ receivers:
 
 processors:
   batch:
+    # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
     send_batch_size: 10000
     timeout: 5s
-  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
+
   resourcedetection:
     # Enriches telemetry data with resource information from the host
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/resourcedetectionprocessor
     detectors: ["env", "system"]
     override: false
+
   transform/drop_unneeded_resource_attributes:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor
     error_mode: ignore
@@ -57,6 +59,7 @@ processors:
           - delete_key(attributes, "process.runtime.description")
           - delete_key(attributes, "process.runtime.name")
           - delete_key(attributes, "process.runtime.version")
+
   transform/add_resource_attributes_as_metric_attributes:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor
     error_mode: ignore
@@ -102,33 +105,36 @@ extensions:
 
 service:
   extensions:
-    [
-      basicauth/grafana_cloud,
-    ]
+    - basicauth/grafana_cloud
   pipelines:
     traces:
-      receivers: [otlp]
+      receivers:
+        - otlp
       processors:
-        [resourcedetection, k8sattributes, transform/drop_unneeded_resource_attributes, batch]
-      exporters: [otlphttp/grafana_cloud]
+        - resourcedetection
+        - k8sattributes
+        - transform/drop_unneeded_resource_attributes
+        - batch
+      exporters:
+        - otlphttp/grafana_cloud
     metrics:
-      receivers: [otlp]
+      receivers:
+        - otlp
       processors:
-        [
-          resourcedetection,
-          k8sattributes,
-          transform/drop_unneeded_resource_attributes,
-          transform/add_resource_attributes_as_metric_attributes,
-          batch,
-        ]
-      exporters: [otlphttp/grafana_cloud]
+        - resourcedetection
+        - k8sattributes
+        - transform/drop_unneeded_resource_attributes
+        - transform/add_resource_attributes_as_metric_attributes
+        - batch
+      exporters:
+        - otlphttp/grafana_cloud
     logs:
-      receivers: [otlp]
+      receivers:
+        - otlp
       processors:
-        [
-          resourcedetection,
-          k8sattributes,
-          transform/drop_unneeded_resource_attributes,
-          batch,
-        ]
-      exporters: [otlphttp/grafana_cloud]
+        - resourcedetection
+        - k8sattributes
+        - transform/drop_unneeded_resource_attributes
+        - batch
+      exporters:
+        - otlphttp/grafana_cloud
