@@ -7,15 +7,6 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-  hostmetrics:
-    # Optional. Host Metrics Receiver added as an example of Infra Monitoring capabilities of the OpenTelemetry Collector
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
-    collection_interval: 1m
-    scrapers:
-      cpu: {}
-      memory: {}
-      load: {}
-      network: {}
 
 processors:
   batch:
@@ -120,7 +111,7 @@ service:
         [resourcedetection, k8sattributes, transform/drop_unneeded_resource_attributes, batch]
       exporters: [otlphttp/grafana_cloud]
     metrics:
-      receivers: [otlp, hostmetrics]
+      receivers: [otlp]
       processors:
         [
           resourcedetection,
