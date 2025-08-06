@@ -7,9 +7,6 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-        tls:
-          cert_file: /etc/otel/tls/tls.crt
-          key_file: /etc/otel/tls/tls.key
 
 processors:
   batch:

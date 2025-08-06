@@ -8,40 +8,6 @@ resource "kubernetes_namespace" "namespace" {
   }
 }
 
-resource "tls_private_key" "key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "tls_self_signed_cert" "certificate" {
-  private_key_pem = tls_private_key.key.private_key_pem
-  allowed_uses    = ["server_auth"]
-
-  subject {
-    common_name  = "otel-collector.com"
-    organization = "OpenTelemetry"
-    country      = "Spain"
-    province     = "Madrid"
-    locality     = "Madrid"
-  }
-
-  validity_period_hours = 175200 # 20 years
-}
-
-resource "kubernetes_secret" "certificate_secret" {
-  metadata {
-    name      = "certificate-secret"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
-  }
-
-  data = {
-    "tls.crt" = tls_self_signed_cert.certificate.cert_pem
-    "tls.key" = tls_private_key.key.private_key_pem
-  }
-
-  type = "kubernetes.io/tls"
-}
-
 resource "kubernetes_role" "pod_executor" {
   metadata {
     name      = "pod-executor"
@@ -164,22 +130,6 @@ resource "kubernetes_manifest" "otel_collector" {
         {
           name  = "GRAFANA_CLOUD_INSTANCE_ID"
           value = var.grafana_instance_id
-        }
-      ]
-
-      volumeMounts = [
-        {
-          name      = "otel-tls"
-          mountPath = "/etc/otel/tls"
-          readOnly  = true
-        }
-      ]
-      volumes = [
-        {
-          name = "otel-tls"
-          secret = {
-            secretName = kubernetes_secret.certificate_secret.metadata[0].name
-          }
         }
       ]
     }
