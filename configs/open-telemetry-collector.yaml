@@ -8,6 +8,7 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
         tls:
+          insecure_skip_verify: true
           cert_file: /etc/otel/tls/tls.crt
           key_file: /etc/otel/tls/tls.key
 
