@@ -85,7 +85,7 @@ resource "helm_release" "otel_operator" {
 
   set {
     name  = "admissionWebhooks.certManager.enabled"
-    value = "false"
+    value = "true"
   }
 
   set {
