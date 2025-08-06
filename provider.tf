@@ -13,6 +13,11 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.17.0"
     }
+
+    tls = {
+      source  = "hashicorp/tls"
+      version = "4.0.6"
+    }
   }
 
   backend "kubernetes" {}
