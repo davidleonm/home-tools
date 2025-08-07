@@ -89,9 +89,10 @@ processors:
           - set(attributes["service.version"], resource.attributes["service.version"])
 
   filter/drop_unknown_service_logs:
+    error_mode: ignore
     logs:
       log_record:
-        - resource.attributes["service.name"] == "unknown_service"
+        - attributes["service.name"] == "unknown_service"
 
   k8sattributes:
     extract:
