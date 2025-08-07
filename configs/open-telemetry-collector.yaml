@@ -88,13 +88,10 @@ processors:
           - set(attributes["service.name"], resource.attributes["service.name"])
           - set(attributes["service.version"], resource.attributes["service.version"])
 
-  filter/drop_unknown_service_logs:
-    error_mode: ignore
+  filter/drop_unknown_logs:
     logs:
-      exclude:
-        match_type: strict
-        resource_attributes:
-          - key: deployment.name
+      log_record:
+        - IsMatch(resource.attributes["process.command"], ".*/thread-stream/.*")
 
   k8sattributes:
     extract:
@@ -161,7 +158,7 @@ service:
         - resourcedetection
         - k8sattributes
         - transform/drop_unneeded_resource_attributes
-        - filter/drop_unknown_service_logs
+        - filter/drop_unknown_logs
         - batch
       exporters:
         - otlphttp/grafana_cloud
