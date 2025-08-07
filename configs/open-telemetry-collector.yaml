@@ -92,7 +92,7 @@ processors:
     error_mode: ignore
     logs:
       log_record:
-        - attributes["service.name"] == "unknown_service"
+        - is_nil(resource.attributes["deployment.name"])
 
   k8sattributes:
     extract:
