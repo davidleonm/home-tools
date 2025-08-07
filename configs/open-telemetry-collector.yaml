@@ -88,6 +88,14 @@ processors:
           - set(attributes["service.name"], resource.attributes["service.name"])
           - set(attributes["service.version"], resource.attributes["service.version"])
 
+  filter/drop_unknown_service_logs:
+    logs:
+      exclude:
+        match_type: strict
+        resource_attributes:
+          - key: service.name
+            value: unknown_service
+
   k8sattributes:
     extract:
       # The attributes provided in 'metadata' will be added to associated resources
@@ -153,6 +161,7 @@ service:
         - resourcedetection
         - k8sattributes
         - transform/drop_unneeded_resource_attributes
+        - filter/drop_unknown_service_logs
         - batch
       exporters:
         - otlphttp/grafana_cloud
