@@ -90,11 +90,8 @@ processors:
 
   filter/drop_unknown_service_logs:
     logs:
-      exclude:
-        match_type: strict
-        resource_attributes:
-          - key: service.name
-            value: unknown_service
+      log_record:
+        - resource.attributes["service.name"] == "unknown_service"
 
   k8sattributes:
     extract:
