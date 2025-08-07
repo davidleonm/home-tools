@@ -91,8 +91,10 @@ processors:
   filter/drop_unknown_service_logs:
     error_mode: ignore
     logs:
-      log_record:
-        - is_nil(resource.attributes["deployment.name"])
+      exclude:
+        match_type: strict
+        resource_attributes:
+          - key: deployment.name
 
   k8sattributes:
     extract:
