@@ -138,7 +138,7 @@ resource "kubernetes_manifest" "otel_collector" {
         ]
 
         selector = {
-          app = "opentelemetry-collector"
+          "app.kubernetes.io/component" = "opentelemetry-collector"
         }
       }
 
