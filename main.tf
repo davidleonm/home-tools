@@ -118,6 +118,30 @@ resource "kubernetes_manifest" "otel_collector" {
       mode   = "statefulset"
       config = yamldecode(file("${path.module}/configs/open-telemetry-collector.yaml"))
 
+      service = {
+        type = "NodePort"
+        ports = [
+          {
+            name       = "otlp-grpc"
+            port       = 4317
+            targetPort = 4317
+            nodePort   = 304317
+            protocol   = "TCP"
+          },
+          {
+            name       = "otlp-http"
+            port       = 4318
+            targetPort = 4318
+            nodePort   = 304318
+            protocol   = "TCP"
+          }
+        ]
+
+        selector = {
+          app = "opentelemetry-collector"
+        }
+      }
+
       env = [
         {
           name  = "GRAFANA_CLOUD_OTLP_ENDPOINT"
