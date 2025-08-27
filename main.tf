@@ -139,7 +139,7 @@ resource "kubernetes_manifest" "otel_collector" {
 
 resource "kubernetes_service" "otel_collector_nodeport" {
   metadata {
-    name      = "opentelemetry-collector"
+    name      = "opentelemetry-collector-nodeport"
     namespace = kubernetes_namespace.namespace.metadata[0].name
   }
 
