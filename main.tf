@@ -114,25 +114,10 @@ resource "kubernetes_manifest" "otel_collector" {
       namespace = kubernetes_namespace.namespace.metadata[0].name
     }
 
+    # Docs -> https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api/opentelemetrycollectors.md#opentelemetryiov1beta1
     spec = {
       mode   = "statefulset"
       config = yamldecode(file("${path.module}/configs/open-telemetry-collector.yaml"))
-      ports = [
-        {
-          name       = "otlp-grpc"
-          port       = 4317
-          targetPort = 4317
-          nodePort   = 34317
-          protocol   = "TCP"
-        },
-        {
-          name       = "otlp-http"
-          port       = 4318
-          targetPort = 4318
-          nodePort   = 34318
-          protocol   = "TCP"
-        }
-      ]
 
       env = [
         {
@@ -148,6 +133,37 @@ resource "kubernetes_manifest" "otel_collector" {
           value = var.grafana_instance_id
         }
       ]
+    }
+  }
+}
+
+resource "kubernetes_service" "otel_collector_nodeport" {
+  metadata {
+    name      = "opentelemetry-collector"
+    namespace = kubernetes_namespace.namespace.metadata[0].name
+  }
+
+  spec {
+    type = "NodePort"
+
+    selector = {
+      "app.kubernetes.io/name" = "opentelemetry-collector"
+    }
+
+    port {
+      name       = "otlp-grpc"
+      port       = 4317
+      target_port = 4317
+      node_port  = 34317
+      protocol   = "TCP"
+    }
+
+    port {
+      name       = "otlp-http"
+      port       = 4318
+      target_port = 4318
+      node_port  = 34318
+      protocol   = "TCP"
     }
   }
 }
