@@ -154,7 +154,7 @@ resource "kubernetes_service" "otel_collector_nodeport" {
       name        = "otlp-grpc"
       port        = 4317
       target_port = 4317
-      node_port   = 34317
+      node_port   = 30017
       protocol    = "TCP"
     }
 
@@ -162,7 +162,7 @@ resource "kubernetes_service" "otel_collector_nodeport" {
       name        = "otlp-http"
       port        = 4318
       target_port = 4318
-      node_port   = 34318
+      node_port   = 30018
       protocol    = "TCP"
     }
   }
