@@ -77,6 +77,7 @@ processors:
           - delete_key(attributes, "process.runtime.description")
           - delete_key(attributes, "process.runtime.name")
           - delete_key(attributes, "process.runtime.version")
+          - set(attributes["severity_text"], upper_case(attributes["severity_text"]))
 
   transform/add_resource_attributes_as_metric_attributes:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor
@@ -92,12 +93,6 @@ processors:
     logs:
       log_record:
         - IsMatch(resource.attributes["process.command"], ".*/thread-stream/.*")
-
-  transform/uppercase_severity_text:
-    log_statements:
-      - context: log_record
-        statements:
-          - set(attributes["severity_text"], upper_case(attributes["severity_text"]))
 
   k8sattributes:
     extract:
@@ -165,7 +160,6 @@ service:
         - k8sattributes
         - transform/drop_unneeded_resource_attributes
         - filter/drop_unknown_logs
-        - transform/uppercase_severity_text
         - batch
       exporters:
         - otlphttp/grafana_cloud
