@@ -156,7 +156,6 @@ service:
         - k8sattributes
         - transform/drop_unneeded_resource_attributes
         - transform/add_resource_attributes_as_metric_attributes
-        - transform/upper_case_severity_text
         - batch
       exporters:
         - otlphttp/grafana_cloud
@@ -168,6 +167,7 @@ service:
         - k8sattributes
         - transform/drop_unneeded_resource_attributes
         - filter/drop_unknown_logs
+        - transform/upper_case_severity_text
         - batch
       exporters:
         - otlphttp/grafana_cloud
