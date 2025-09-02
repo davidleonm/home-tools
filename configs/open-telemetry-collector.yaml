@@ -77,7 +77,6 @@ processors:
           - delete_key(attributes, "process.runtime.description")
           - delete_key(attributes, "process.runtime.name")
           - delete_key(attributes, "process.runtime.version")
-          - set(attributes["severity_text"], upper_case(attributes["severity_text"]))
 
   transform/upper_case_severity_text:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor
@@ -85,7 +84,7 @@ processors:
     log_statements:
       - context: resource
         statements:
-          - set(attributes["severity_text"], toUpperCase(attributes["severity_text"]))
+          - set(attributes["severity_text"], ToUpperCase(attributes["severity_text"]))
 
   transform/add_resource_attributes_as_metric_attributes:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor
