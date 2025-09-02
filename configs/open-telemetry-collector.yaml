@@ -93,6 +93,12 @@ processors:
       log_record:
         - IsMatch(resource.attributes["process.command"], ".*/thread-stream/.*")
 
+  transform/uppercase_severity_text:
+    log_statements:
+      - context: log_record
+        statements:
+          - set(attributes["severity_text"], upper_case(attributes["severity_text"]))
+
   k8sattributes:
     extract:
       # The attributes provided in 'metadata' will be added to associated resources
@@ -159,6 +165,7 @@ service:
         - k8sattributes
         - transform/drop_unneeded_resource_attributes
         - filter/drop_unknown_logs
+        - transform/uppercase_severity_text
         - batch
       exporters:
         - otlphttp/grafana_cloud
