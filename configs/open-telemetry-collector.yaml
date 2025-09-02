@@ -79,6 +79,14 @@ processors:
           - delete_key(attributes, "process.runtime.version")
           - set(attributes["severity_text"], upper_case(attributes["severity_text"]))
 
+  transform/upper_case_severity_text:
+    # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor
+    error_mode: ignore
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["severity_text"], toUpperCase(attributes["severity_text"]))
+
   transform/add_resource_attributes_as_metric_attributes:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor
     error_mode: ignore
@@ -149,6 +157,7 @@ service:
         - k8sattributes
         - transform/drop_unneeded_resource_attributes
         - transform/add_resource_attributes_as_metric_attributes
+        - transform/upper_case_severity_text
         - batch
       exporters:
         - otlphttp/grafana_cloud
