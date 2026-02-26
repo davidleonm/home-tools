@@ -1,5 +1,5 @@
 # home-tools
-Repository with muy favourite tools to be deployed on Kubernetes with Terraform
+Repository with my favourite tools to be deployed on Kubernetes with Terraform
 
 ## Pre-Commit hook
 This repository contains a git hook that formats the files before any commit.
